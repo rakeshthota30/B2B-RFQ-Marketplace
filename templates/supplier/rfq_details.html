@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}RFQ Details{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold">{{ rfq.product_name }}</h2>
+        <p class="text-muted mb-0">RFQ #{{ rfq.id }}</p>
+    </div>
+    <a href="{{ url_for('supplier.dashboard') }}" class="btn btn-outline-secondary">Back</a>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-4">
+            <div class="col-md-6"><strong>Product / Service</strong><br>{{ rfq.product_name }}</div>
+            <div class="col-md-6"><strong>Quantity</strong><br>{{ rfq.quantity }}</div>
+            <div class="col-md-6"><strong>Delivery Location</strong><br>{{ rfq.delivery_location }}</div>
+            <div class="col-md-6"><strong>Deadline</strong><br>{{ rfq.deadline.strftime("%d-%m-%Y") }}</div>
+            <div class="col-12"><strong>Requirement</strong><p class="mt-2 mb-0">{{ rfq.description }}</p></div>
+        </div>
+    </div>
+</div>
+
+{% if existing_quote %}
+<div class="alert alert-success">
+    <h5 class="alert-heading">Quotation already submitted</h5>
+    <p class="mb-1"><strong>Price:</strong> ₹{{ "%.2f"|format(existing_quote.quoted_price|float) }}</p>
+    <p class="mb-1"><strong>Delivery:</strong> {{ existing_quote.delivery_time }}</p>
+    <p class="mb-0"><strong>Message:</strong> {{ existing_quote.message or "No message." }}</p>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+        <h4 class="fw-bold mb-3">Submit Quotation</h4>
+        <form method="POST" action="{{ url_for('supplier.submit_quote', rfq_id=rfq.id) }}">
+            <div class="mb-3">
+                <label class="form-label">Quoted Price (₹) *</label>
+                <input type="number" name="quoted_price" class="form-control" min="0.01" step="0.01" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Estimated Delivery Time *</label>
+                <input type="text" name="delivery_time" class="form-control" placeholder="e.g. 15 days" maxlength="100" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Message / Notes</label>
+                <textarea name="message" class="form-control" rows="4" maxlength="2000" placeholder="Add any relevant notes"></textarea>
+            </div>
+
+            <button class="btn btn-primary">Submit Quotation</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

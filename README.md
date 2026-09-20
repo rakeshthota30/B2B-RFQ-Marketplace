@@ -131,3 +131,8 @@ Example production start command:
 ```bash
 gunicorn app:app
 ```
+# Live Links
+https://b2b-rfq-marketplace-1-24ay.onrender.com/login
+
+# GitHub Links
+https://github.com/rakeshthota30/B2B-RFQ-Marketplace.git
